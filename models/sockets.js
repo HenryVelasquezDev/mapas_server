@@ -1,3 +1,4 @@
+const Marcadores = require("./marcadores");
 
 
 class Sockets {
@@ -5,6 +6,9 @@ class Sockets {
     constructor(io) {
 
         this.io = io;
+
+        this.marcadores = new Marcadores();
+
         this.socketsEvents();
 
     }
@@ -13,16 +17,21 @@ class Sockets {
         //"socket en el argumento hace referencia al cliente dispositivo que se esta conectando"
         this.io.on('connection', (socket) => {
 
-            socket.on('mensaje-cliente', (data) => {
-                console.log(data);
+            socket.emit( 'marcadores-activos' , this.marcadores.activos );
+
+            socket.on( 'marcador-nuevo' , ( marcador ) =>{
+                
+                this.marcadores.agregarMarcador( marcador );
+
+                //broadcaste permite emitir desde el socket a todos los clientes excepto quien emitio en principio el evento
+                socket.broadcast.emit( 'marcador-nuevo', marcador );
             });
 
-            //Escuchar el evento: mensaje-to-server
-            socket.on('mensaje-to-server', (data) => {
-               
-                this.io.emit('mensaje-from-server', data);
+            socket.on( 'marcador-actualizado' , ( marcador ) =>{
+                this.marcadores.actualizarMarcador( marcador );
+                socket.broadcast.emit( 'marcador-actualizado', marcador );
+            })
 
-            });
         });
     }
 
