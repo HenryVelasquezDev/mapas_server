@@ -1,3 +1,8 @@
+# Tener en cuenta
+
+Esta proyecto trabaja en conjunto con el repositorio react-mapas-app ( https://github.com/HenryVelasquezDev/react-mapas-app )
+
+
 # socket-server
 Proyecto base de backend server utilizando Socket-io, Express y CORS 
 
